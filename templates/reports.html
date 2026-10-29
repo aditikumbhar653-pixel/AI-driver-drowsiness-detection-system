@@ -1,0 +1,593 @@
+{% extends "base.html" %}
+
+{% block title %}Reports | AI Driver Drowsiness{% endblock %}
+
+{% block content %}
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.reports-container {
+    max-width: 1250px;
+    margin: auto;
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+
+.header h1 {
+    font-size: 28px;
+    color: #0f172a;
+    margin: 0 0 7px;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0;
+}
+
+.back-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    background: #1d4ed8;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.summary-card {
+    background: white;
+    padding: 22px;
+    border: 1px solid #e2e8f0;
+    border-radius: 13px;
+    box-shadow: 0 3px 12px #0f172a08;
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.blue {
+    background: #dbeafe;
+}
+
+.orange {
+    background: #ffedd5;
+}
+
+.green {
+    background: #dcfce7;
+}
+
+.summary-card p {
+    color: #64748b;
+    font-size: 13px;
+    margin: 0 0 8px;
+}
+
+.summary-card h2 {
+    font-size: 29px;
+    color: #0f172a;
+    margin: 0;
+}
+
+.report-panel {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 3px 12px #0f172a08;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.panel-header h2 {
+    font-size: 19px;
+    margin: 0 0 6px;
+}
+
+.panel-header p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+}
+
+.report-count {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-radius: 20px;
+    padding: 8px 13px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+thead {
+    background: #f8fafc;
+}
+
+th {
+    text-align: left;
+    padding: 15px 13px;
+    color: #475569;
+    font-size: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+td {
+    padding: 16px 13px;
+    font-size: 13px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+.status {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-drowsy {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-normal {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-other {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 55px 15px;
+}
+
+.empty-icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    color: #0f172a;
+    font-size: 19px;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 22px;
+    line-height: 1.6;
+}
+
+.footer {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 12px;
+    padding: 25px 0 5px;
+}
+
+.flash-message {
+    padding: 13px 16px;
+    border-radius: 9px;
+    margin-bottom: 18px;
+    font-size: 13px;
+}
+
+.flash-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.flash-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.flash-info {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.clear-form {
+    margin: 0;
+}
+
+.clear-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 11px 17px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.clear-btn:hover {
+    background: #b91c1c;
+}
+
+.clear-btn:active {
+    transform: scale(0.98);
+}
+
+/* PAGINATION */
+
+.pagination-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 13px;
+    margin: 25px 0 10px;
+}
+
+.pagination-info {
+    color: #64748b;
+    font-size: 13px;
+    text-align: center;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 40px;
+    padding: 10px 13px;
+    border: 1px solid #dbe3ee;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.pagination a:hover {
+    background: #eff6ff;
+    border-color: #2563eb;
+}
+
+.pagination .active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+}
+
+.pagination .disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    border-color: #e2e8f0;
+    cursor: not-allowed;
+}
+
+@media (max-width: 750px) {
+    .reports-container {
+        padding: 18px 12px;
+    }
+
+    .header h1 {
+        font-size: 23px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .report-panel {
+        padding: 15px;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 9px 11px;
+        min-width: 36px;
+    }
+}
+</style>
+
+<div class="reports-container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div>
+            <h1>📊 Detection Reports</h1>
+            <p>AI Driver Drowsiness Detection System</p>
+        </div>
+
+        <a href="{{ url_for('dashboard') }}" class="back-btn">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash-message
+                {% if category == 'success' %}
+                    flash-success
+                {% elif category == 'error' %}
+                    flash-error
+                {% else %}
+                    flash-info
+                {% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- SUMMARY CARDS -->
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="card-icon blue">📋</div>
+            <p>Total Reports</p>
+            <h2>{{ total_reports }}</h2>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-icon orange">⚠️</div>
+            <p>Drowsiness Alerts</p>
+            <h2>{{ drowsiness_count }}</h2>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-icon green">🛡️</div>
+            <p>Normal Status</p>
+            <h2>{{ normal_count }}</h2>
+        </div>
+
+    </div>
+
+    <!-- REPORT HISTORY -->
+    <div class="report-panel">
+
+        <div class="panel-header">
+            <div>
+                <h2>Monitoring History</h2>
+                <p>View your saved detection records</p>
+            </div>
+
+            <span class="report-count">
+                {{ total_reports }} Total Records
+            </span>
+        </div>
+
+        {% if reports %}
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Report ID</th>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Detection Status</th>
+                            <th>Date &amp; Time</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for report in reports %}
+                            <tr>
+                                <td>#{{ report['id'] }}</td>
+
+                                <td>
+                                    {{ report['user_id'] or '-' }}
+                                </td>
+
+                                <td>
+                                    {{ report['username'] or username }}
+                                </td>
+
+                                <td>
+                                    {% set status =
+                                        (report['status'] or 'Unknown')|lower %}
+
+                                    {% if status in
+                                    ['drowsy', 'sleepy', 'drowsiness detected'] %}
+                                        <span class="status status-drowsy">
+                                            ⚠ Drowsiness Detected
+                                        </span>
+
+                                    {% elif status == 'normal' %}
+                                        <span class="status status-normal">
+                                            ✓ Normal
+                                        </span>
+
+                                    {% else %}
+                                        <span class="status status-other">
+                                            {{ report['status'] or 'Unknown' }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {{ report['created_at'] or '-' }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINATION -->
+            {% if total_pages > 1 %}
+
+            <div class="pagination-container">
+
+                <div class="pagination-info">
+                    Page {{ page }} of {{ total_pages }}
+                    | Showing {{ reports|length }} records on this page
+                </div>
+
+                <div class="pagination">
+
+                    {% if page > 1 %}
+                        <a href="{{ url_for('reports', page=page-1) }}">
+                            &laquo; Previous
+                        </a>
+                    {% else %}
+                        <span class="disabled">
+                            &laquo; Previous
+                        </span>
+                    {% endif %}
+
+                    {% for p in range(1, total_pages + 1) %}
+
+                        {% if p == page %}
+                            <span class="active">{{ p }}</span>
+                        {% else %}
+                            <a href="{{ url_for('reports', page=p) }}">
+                                {{ p }}
+                            </a>
+                        {% endif %}
+
+                    {% endfor %}
+
+                    {% if page < total_pages %}
+                        <a href="{{ url_for('reports', page=page+1) }}">
+                            Next &raquo;
+                        </a>
+                    {% else %}
+                        <span class="disabled">
+                            Next &raquo;
+                        </span>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            {% endif %}
+
+            <!-- CLEAR RECORDS -->
+            <div class="actions">
+
+                <form class="clear-form"
+                      method="POST"
+                      action="{{ url_for('clear_reports') }}"
+                      onsubmit="return confirm('Are you sure you want to clear all your reports? This action cannot be undone.');">
+
+                    <button type="submit" class="clear-btn">
+                        🗑 Clear Records
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+                <div class="empty-icon">📂</div>
+
+                <h3>No Reports Available</h3>
+
+                <p>
+                    No monitoring records have been saved yet.
+                    Start camera monitoring to generate
+                    detection records.
+                </p>
+
+                <a href="{{ url_for('camera') }}" class="back-btn">
+                    📹 Start Monitoring
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        © 2026 AI Driver Drowsiness Detection System
+        | Driver Safety Monitoring
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Drowsiness Detection</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #183b7a, #285dcc);
+            color: white;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: white;
+            background: #2864e8;
+            padding: 10px 18px;
+            border-radius: 8px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .welcome {
+            background: white;
+            color: #222;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            color: #183b7a;
+            margin-bottom: 8px;
+        }
+
+        .camera-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        .camera-box h2 {
+            color: #183b7a;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            background: black;
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-container img {
+            width: 100%;
+            display: block;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eaf1fc;
+            color: #183b7a;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 25px;
+            margin: 5px;
+            border-radius: 8px;
+            color: white;
+            background: #2864e8;
+        }
+
+        .btn:hover {
+            background: #174fc5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>🚗 AI Driver Drowsiness Detection</h1>
+
+        <a href="/dashboard" class="back-btn">
+            ← Dashboard
+        </a>
+
+    </div>
+
+    <div class="container">
+
+        <div class="welcome">
+
+            <h2>Driver Monitoring</h2>
+
+            <p>
+                Driver Name:
+                <strong>{{ username }}</strong>
+            </p>
+
+            <p>
+                Driver ID:
+                <strong>{{ driver_id }}</strong>
+            </p>
+
+        </div>
+
+        <div class="camera-box">
+
+            <h2>Live Drowsiness Detection</h2>
+
+            <div class="video-container">
+
+                <img
+                    src="{{ url_for('video_feed') }}"
+                    alt="Drowsiness Detection Camera"
+                >
+
+            </div>
+
+            <div class="status">
+                👁️ Eye monitoring is active
+            </div>
+
+            <div class="buttons">
+
+                <a href="/camera" class="btn">
+                    📷 Camera
+                </a>
+
+                <a href="/reports" class="btn">
+                    📊 Reports
+                </a>
+
+                <a href="/alarm" class="btn">
+                    🔔 Alarm
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Profile | AI Driver Drowsiness</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-width: 250px;
+            background: #0f172a;
+            color: white;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            padding: 10px;
+            margin-bottom: 25px;
+        }
+
+        .sidebar a {
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 13px 12px;
+            border-radius: 8px;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .sidebar .logout {
+            margin-top: auto;
+            background: #7f1d1d;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            padding: 30px;
+            min-width: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .user-name {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0000000d;
+        }
+
+        .profile-card {
+            max-width: 950px;
+            margin: auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px #0000000d;
+        }
+
+        .profile-top {
+            text-align: center;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 25px;
+        }
+
+        .profile-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            margin: 0 auto 12px;
+        }
+
+        .profile-top h2 {
+            margin: 8px 0;
+        }
+
+        .profile-top p {
+            color: #64748b;
+            margin: 5px 0;
+        }
+
+        .section-title {
+            font-size: 19px;
+            margin: 25px 0 18px;
+            color: #1d4ed8;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px #2563eb1a;
+        }
+
+        .form-group input[readonly] {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .edit-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .save-btn {
+            background: #16a34a;
+            color: white;
+            display: none;
+        }
+
+        .cancel-btn {
+            background: #e2e8f0;
+            color: #334155;
+            display: none;
+        }
+
+        .flash-message {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .sidebar .logout {
+                margin-top: 5px;
+            }
+
+            .main {
+                padding: 15px;
+            }
+
+            .profile-card {
+                padding: 20px 15px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">🚗 AI Driver</div>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/camera">📷 Live Camera</a>
+        <a href="/eye-detection">👁 Eye Detection</a>
+        <a href="/drowsiness">😴 Drowsiness</a>
+        <a href="/alarm">🔔 Alarm</a>
+        <a href="/reports">📊 Reports</a>
+        <a href="/profile" class="active">👤 Profile</a>
+        <a href="/logout" class="logout">🚪 Logout</a>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <div class="header">
+            <h1>My Profile</h1>
+            <span class="user-name">
+                Welcome, {{ username }}
+            </span>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <!-- PROFILE CARD -->
+        <div class="profile-card">
+
+            <div class="profile-top">
+                <div class="profile-icon">👤</div>
+                <h2>Driver Profile</h2>
+                <p>Manage your personal and driving information</p>
+                <p><strong>Driver ID:</strong> {{ driver_id }}</p>
+            </div>
+
+            <!-- PROFILE FORM -->
+            <form action="{{ url_for('profile') }}"
+                  method="POST"
+                  id="profileForm">
+
+                <h3 class="section-title">👤 Personal Information</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Driver ID</label>
+                        <input type="text"
+                               value="{{ driver_id }}"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text"
+                               value="{{ username }}"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text"
+                               name="full_name"
+                               value="{{ profile.get('full_name', '') }}"
+                               placeholder="Enter full name"
+                               class="editable"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email"
+                               value="{{ email }}"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel"
+                               name="phone_number"
+                               value="{{ profile.get('phone_number', '') }}"
+                               placeholder="Enter phone number"
+                               maxlength="15"
+                               class="editable"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date"
+                               name="date_of_birth"
+                               value="{{ profile.get('date_of_birth', '') }}"
+                               class="editable"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select name="gender"
+                                class="editable"
+                                disabled>
+                            <option value="">Select Gender</option>
+                            <option value="Male"
+                                {% if profile.get('gender') == 'Male' %}selected{% endif %}>
+                                Male
+                            </option>
+                            <option value="Female"
+                                {% if profile.get('gender') == 'Female' %}selected{% endif %}>
+                                Female
+                            </option>
+                            <option value="Other"
+                                {% if profile.get('gender') == 'Other' %}selected{% endif %}>
+                                Other
+                            </option>
+                            <option value="Prefer not to say"
+                                {% if profile.get('gender') == 'Prefer not to say' %}selected{% endif %}>
+                                Prefer not to say
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <h3 class="section-title">🚘 Driving Information</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Driving Licence ID</label>
+                        <input type="text"
+                               name="licence_id"
+                               value="{{ profile.get('licence_id', '') }}"
+                               placeholder="Enter licence ID"
+                               class="editable"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Licence Type</label>
+                        <select name="licence_type"
+                                class="editable"
+                                disabled>
+                            <option value="">Select Licence Type</option>
+                            <option value="Two Wheeler"
+                                {% if profile.get('licence_type') == 'Two Wheeler' %}selected{% endif %}>
+                                Two Wheeler
+                            </option>
+                            <option value="LMV"
+                                {% if profile.get('licence_type') == 'LMV' %}selected{% endif %}>
+                                LMV
+                            </option>
+                            <option value="Transport"
+                                {% if profile.get('licence_type') == 'Transport' %}selected{% endif %}>
+                                Transport
+                            </option>
+                            <option value="Other"
+                                {% if profile.get('licence_type') == 'Other' %}selected{% endif %}>
+                                Other
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Licence Issue Date</label>
+                        <input type="date"
+                               name="licence_issue_date"
+                               value="{{ profile.get('licence_issue_date', '') }}"
+                               class="editable"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Licence Expiry Date</label>
+                        <input type="date"
+                               name="licence_expiry_date"
+                               value="{{ profile.get('licence_expiry_date', '') }}"
+                               class="editable"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Vehicle Number</label>
+                        <input type="text"
+                               name="vehicle_number"
+                               value="{{ profile.get('vehicle_number', '') }}"
+                               placeholder="e.g. MH09AB1234"
+                               class="editable"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Driving Experience (Years)</label>
+                        <input type="number"
+                               name="experience"
+                               value="{{ profile.get('experience', '') }}"
+                               min="0"
+                               max="80"
+                               placeholder="Enter years"
+                               class="editable"
+                               readonly>
+                    </div>
+
+                </div>
+
+                <h3 class="section-title">🔐 Account Information</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Account Status</label>
+                        <input type="text"
+                               value="Active"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Registration Date</label>
+                        <input type="text"
+                               value="{{ profile.get('registration_date', 'N/A') }}"
+                               readonly>
+                    </div>
+
+                </div>
+
+                <div class="button-row">
+
+                    <button type="button"
+                            class="btn edit-btn"
+                            id="editBtn"
+                            onclick="enableEdit()">
+                        ✏️ Edit Profile
+                    </button>
+
+                    <button type="button"
+                            class="btn cancel-btn"
+                            id="cancelBtn"
+                            onclick="window.location.reload()">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="btn save-btn"
+                            id="saveBtn">
+                        💾 Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    function enableEdit() {
+        document.querySelectorAll(".editable").forEach(function(field) {
+            if (field.tagName === "SELECT") {
+                field.disabled = false;
+            } else {
+                field.readOnly = false;
+            }
+        });
+
+        document.getElementById("editBtn").style.display = "none";
+        document.getElementById("saveBtn").style.display = "inline-block";
+        document.getElementById("cancelBtn").style.display = "inline-block";
+    }
+</script>
+
+</body>
+</html>

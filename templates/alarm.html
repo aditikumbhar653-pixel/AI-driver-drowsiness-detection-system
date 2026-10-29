@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Alarm System - AI Driver Drowsiness</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🚗 AI Driver
+        </div>
+
+        <a href="/dashboard">
+            🏠 Dashboard
+        </a>
+
+        <a href="/camera">
+            📷 Live Camera
+        </a>
+
+        <a href="/eye-detection">
+            👁 Eye Detection
+        </a>
+
+        <a href="/drowsiness">
+            😴 Drowsiness
+        </a>
+
+        <a href="/alarm" class="active">
+            🔔 Alarm
+        </a>
+
+        <a href="/reports">
+            📊 Reports
+        </a>
+
+        <a href="/profile">
+            👤 Profile
+        </a>
+
+        <a href="/logout" class="logout">
+            🚪 Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <div class="header">
+
+            <h1>
+                Alarm System
+            </h1>
+
+            <span class="user-name">
+                Welcome, {{ username }}
+            </span>
+
+        </div>
+
+
+        <!-- ALARM CARD -->
+
+        <div class="profile">
+
+            <div class="profile-icon">
+                🔔
+            </div>
+
+            <h2>
+                Drowsiness Alarm
+            </h2>
+
+            <p>
+                The alarm will automatically activate
+                when drowsiness is detected.
+            </p>
+
+
+            <div class="profile-info">
+
+                <div class="info-row">
+
+                    <strong>
+                        Driver ID
+                    </strong>
+
+                    <span>
+                        {{ driver_id }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <strong>
+                        Driver Name
+                    </strong>
+
+                    <span>
+                        {{ username }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <strong>
+                        Alarm Status
+                    </strong>
+
+                    <span>
+                        Ready
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div style="
+                margin-top: 30px;
+                padding: 20px;
+                text-align: center;
+                border-radius: 12px;
+                background: #f5f5f5;
+            ">
+
+                <h3>
+                    🔔 Alarm Ready
+                </h3>
+
+                <p>
+                    Start Live Camera to activate
+                    drowsiness monitoring.
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

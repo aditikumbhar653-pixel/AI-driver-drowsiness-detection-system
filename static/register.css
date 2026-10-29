@@ -1,0 +1,455 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #061326;
+    color: #fff;
+}
+
+/* Navbar */
+.navbar {
+    min-height: 85px;
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background: #07182e;
+    border-bottom: 1px solid #203751;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #f5f8ff;
+    font-size: 23px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.logo-icon {
+    font-size: 36px;
+}
+
+.blue {
+    color: #1685ff;
+}
+
+.navbar nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.navbar nav a {
+    color: #c6d5eb;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.navbar nav a:hover {
+    color: #1685ff;
+}
+
+.navbar nav .nav-register {
+    padding: 11px 23px;
+    color: white;
+    background: #147cf3;
+    border-radius: 8px;
+}
+
+/* Main Layout */
+.main-container {
+    min-height: calc(100vh - 85px);
+    padding: 40px 6%;
+    display: grid;
+    grid-template-columns: 1.15fr 0.9fr;
+    align-items: center;
+    gap: 45px;
+    background:
+        radial-gradient(ellipse at 15% 45%, #10345a 0%, transparent 48%),
+        linear-gradient(120deg, #061326, #0a203b);
+}
+
+/* Hero Section */
+.hero-section {
+    width: 100%;
+    max-width: 680px;
+    margin: auto;
+}
+
+.detection-card {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 15px 20px;
+    margin: 0 0 60px auto;
+    background: rgba(8, 35, 66, 0.85);
+    border: 1px solid #167cce;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 120, 255, 0.12);
+}
+
+.detection-icon {
+    font-size: 27px;
+    color: #36a1ff;
+}
+
+.detection-status {
+    color: #38a4ff;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+.detection-card p {
+    color: #e2edff;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: #20db87;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #20db87;
+    margin-left: 10px;
+}
+
+.hero-content h1 {
+    font-size: clamp(42px, 5vw, 65px);
+    line-height: 1.15;
+    font-weight: 750;
+    color: #f5f8ff;
+    margin-bottom: 20px;
+}
+
+.hero-content h1 span {
+    color: #1685ff;
+}
+
+.hero-description {
+    max-width: 520px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: #b5c7df;
+    margin-bottom: 35px;
+}
+
+/* Features */
+.features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 20px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.feature-icon {
+    width: 65px;
+    height: 65px;
+    min-width: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 27px;
+    color: #38a0ff;
+    background: #102b4b;
+    border: 1px solid #1763a9;
+    border-radius: 50%;
+}
+
+.feature h3 {
+    font-size: 16px;
+    color: #eaf2ff;
+    margin-bottom: 5px;
+}
+
+.feature p {
+    color: #b5c7df;
+    font-size: 14px;
+}
+
+/* Register Card */
+.register-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 510px;
+    padding: 35px 34px;
+    text-align: center;
+    color: #142b4c;
+    background: #f8fbff;
+    border: 1px solid #d9e5f3;
+    border-radius: 14px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+}
+
+.form-icon {
+    font-size: 42px;
+    color: #147cf3;
+    margin-bottom: 12px;
+}
+
+.register-card h2 {
+    font-size: 27px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #152b49;
+}
+
+.subtitle {
+    color: #7386a4;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+/* Flash Messages */
+.alert {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.alert.error,
+.alert.danger {
+    background: #fff0f2;
+    border: 1px solid #ffc5ce;
+    color: #c6283d;
+}
+
+.alert.success {
+    background: #eafaf0;
+    border: 1px solid #b4e8c6;
+    color: #18763b;
+}
+
+/* Input Fields */
+.input-group {
+    height: 55px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    border: 1px solid #ccdaec;
+    border-radius: 9px;
+    background: #f8fbff;
+    transition: 0.3s;
+}
+
+.input-group:focus-within {
+    border-color: #1685ff;
+    box-shadow: 0 0 0 3px rgba(22, 133, 255, 0.1);
+}
+
+.input-icon {
+    width: 52px;
+    min-width: 52px;
+    font-size: 21px;
+    color: #193757;
+}
+
+.input-group input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #193757;
+    font-size: 15px;
+    padding: 0 8px;
+}
+
+.input-group input::placeholder {
+    color: #7d8eaa;
+}
+
+.toggle-password {
+    border: none;
+    background: transparent;
+    color: #657d9d;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px 13px;
+}
+
+/* Password Error */
+.password-error {
+    color: #d62839;
+    font-size: 13px;
+    text-align: left;
+    margin-bottom: 8px;
+}
+
+/* Register Button */
+.register-btn {
+    width: 100%;
+    height: 54px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 9px;
+    background: linear-gradient(90deg, #0877f9, #1685ed);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.register-btn:hover {
+    background: linear-gradient(90deg, #075fc8, #096bd5);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(10, 110, 230, 0.25);
+}
+
+/* Login Link */
+.login-text {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #7185a2;
+    font-size: 14px;
+}
+
+.login-text a {
+    color: #0877e9;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.login-text a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 950px) {
+    .main-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        padding: 35px 4%;
+    }
+
+    .logo {
+        font-size: 19px;
+    }
+
+    .register-card {
+        padding: 28px 22px;
+    }
+
+    .feature-icon {
+        width: 55px;
+        height: 55px;
+        min-width: 55px;
+    }
+}
+
+@media (max-width: 700px) {
+    .navbar {
+        padding: 14px 5%;
+        flex-wrap: wrap;
+        min-height: 75px;
+    }
+
+    .logo {
+        font-size: 16px;
+        gap: 8px;
+    }
+
+    .logo-icon {
+        font-size: 29px;
+    }
+
+    .navbar nav {
+        gap: 15px;
+    }
+
+    .navbar nav a {
+        font-size: 14px;
+    }
+
+    .navbar nav .nav-register {
+        padding: 9px 13px;
+    }
+
+    .main-container {
+        grid-template-columns: 1fr;
+        padding: 25px 5% 40px;
+        gap: 30px;
+    }
+
+    .detection-card {
+        margin: 0 0 30px auto;
+    }
+
+    .hero-content h1 {
+        font-size: 42px;
+    }
+
+    .hero-description {
+        font-size: 16px;
+    }
+
+    .features {
+        gap: 20px 10px;
+    }
+
+    .feature {
+        gap: 9px;
+    }
+
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        font-size: 22px;
+    }
+
+    .feature h3 {
+        font-size: 14px;
+    }
+
+    .feature p {
+        font-size: 12px;
+    }
+
+    .register-card {
+        padding: 28px 20px;
+    }
+
+    .register-card h2 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 380px) {
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar nav {
+        gap: 10px;
+    }
+}

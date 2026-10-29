@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Live Camera</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="sidebar">
+
+        <div class="logo">
+            🚗 AI DROWSINESS
+        </div>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/camera">📷 Live Camera</a>
+        <a href="/eye-detection">👁 Eye Detection</a>
+        <a href="/drowsiness">😴 Drowsiness</a>
+        <a href="/alarm">🔔 Alarm System</a>
+        <a href="/reports">📊 Reports</a>
+        <a href="/profile">👤 Profile</a>
+
+        <a class="logout" href="/logout">
+            🚪 Logout
+        </a>
+
+    </div>
+
+
+    <div class="main">
+
+        <div class="header">
+
+            <div>
+                <h1>Live Camera</h1>
+
+                <p>
+                    Real-time driver monitoring
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="box camera">
+
+            <h2>📷 Live Driver Camera</h2>
+
+            <p>
+                Camera is monitoring the driver.
+            </p>
+
+
+            <div class="camera-frame">
+
+                <img
+                    src="{{ url_for('video_feed') }}"
+                    alt="Live Camera"
+                >
+
+            </div>
+
+
+            <div class="camera-info">
+
+                <span>
+                    🟢 Camera Active
+                </span>
+
+                <span>
+                    🤖 AI Processing
+                </span>
+
+                <span>
+                    👁 Eye Monitoring
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

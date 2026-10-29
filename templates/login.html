@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Driver Drowsiness - Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #183b7a, #285dcc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 510px;
+            background: white;
+            padding: 45px 50px;
+            border-radius: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 55px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #071b3d;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-size: 17px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #c5cbd5;
+            border-radius: 10px;
+            background: #eaf1fc;
+            font-size: 16px;
+            margin-bottom: 22px;
+            outline: none;
+        }
+
+        input:focus {
+            border: 2px solid #2864e8;
+            background: white;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: #2864e8;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 19px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .login-btn:hover {
+            background: #174fc5;
+        }
+
+        .register-section {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .register-section a {
+            color: #2864e8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-section a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            background: #ffe5e5;
+            color: #c62828;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 22px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="logo">🚗</div>
+
+        <h1>AI Driver Drowsiness</h1>
+
+        <div class="subtitle">
+            Driver Monitoring System
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login') }}" method="POST">
+
+            <label for="email">Username / Email</label>
+
+            <input
+                type="text"
+                id="email"
+                name="email"
+                placeholder="Enter your username or email"
+                autocomplete="username"
+                required
+            >
+
+            <label for="password">Password</label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit" class="login-btn">
+                🔐 Login
+            </button>
+
+        </form>
+
+        <div class="register-section">
+            <p>Don't have an account?</p>
+
+            <a href="{{ url_for('signup') }}">
+                Create Account / Register
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

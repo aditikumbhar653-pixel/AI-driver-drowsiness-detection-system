@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Registration | AI Driver Drowsiness Detection</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #08152e, #102e59);
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 650px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, .25);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 27px;
+            margin-bottom: 10px;
+            color: #102e59;
+        }
+
+        .subtitle {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .camera-box {
+            width: 100%;
+            background: #0b1220;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            aspect-ratio: 4 / 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+
+        .camera-label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, .7);
+            color: white;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .instruction {
+            padding: 13px;
+            margin-bottom: 14px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .progress-track {
+            height: 9px;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 12px 0 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #1769e0;
+            transition: width .25s ease;
+        }
+
+        .progress-text {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .consent {
+            display: flex;
+            align-items: flex-start;
+            text-align: left;
+            gap: 10px;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 16px 0;
+        }
+
+        .consent input {
+            margin-top: 3px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button, .logout {
+            border: none;
+            border-radius: 9px;
+            padding: 13px 18px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        button {
+            flex: 1;
+            background: #1769e0;
+            color: white;
+        }
+
+        button:hover:not(:disabled) {
+            background: #0e55bc;
+        }
+
+        button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .secondary {
+            background: #475569;
+        }
+
+        .secondary:hover:not(:disabled) {
+            background: #334155;
+        }
+
+        .logout {
+            display: inline-block;
+            margin-top: 18px;
+            color: #475569;
+            background: #f1f5f9;
+        }
+
+        .status {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #334155;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .note {
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 22px 17px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            button {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="card">
+
+        <div class="icon">📷</div>
+
+        <h1>Face Registration</h1>
+
+        <p class="subtitle">
+            Hello, <strong>{{ username }}</strong>!<br>
+            Look naturally at the camera to register your face.
+        </p>
+
+        <div class="camera-box">
+            <video id="video" autoplay muted playsinline></video>
+            <div class="camera-label" id="cameraLabel">
+                CAMERA OFF
+            </div>
+        </div>
+
+        <div class="instruction" id="instruction">
+            Click Start Camera to begin.
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="progress-text" id="progressText">
+            0 of 60 frames captured
+        </div>
+
+        <label class="consent">
+            <input type="checkbox" id="consent">
+            <span>
+                I understand that this process captures and stores
+                face samples for face verification in this project.
+                I agree to register my own face.
+            </span>
+        </label>
+
+        <div class="buttons">
+            <button type="button" id="startBtn">
+                Start Camera
+            </button>
+
+            <button type="button" id="captureBtn" disabled>
+                Register My Face
+            </button>
+
+            <button type="button" id="stopBtn"
+                    class="secondary" disabled>
+                Stop Camera
+            </button>
+        </div>
+
+        <div class="status" id="status" role="status">
+            Click Start Camera and allow camera access.
+        </div>
+
+        <p class="note">
+            Look naturally at the camera. No special head movement
+            is required. This is an experimental project feature
+            and is not a substitute for a real driver safety system.
+        </p>
+
+        <a class="logout" href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+        <canvas id="canvas" hidden></canvas>
+    </main>
+
+    <script>
+        const video = document.getElementById("video");
+        const canvas = document.getElementById("canvas");
+
+        const statusBox = document.getElementById("status");
+        const instruction = document.getElementById("instruction");
+        const cameraLabel = document.getElementById("cameraLabel");
+
+        const progressFill = document.getElementById("progressFill");
+        const progressText = document.getElementById("progressText");
+
+        const startBtn = document.getElementById("startBtn");
+        const captureBtn = document.getElementById("captureBtn");
+        const stopBtn = document.getElementById("stopBtn");
+        const consent = document.getElementById("consent");
+
+        const captureFrames = 60;
+
+        let stream = null;
+        let busy = false;
+
+        function showStatus(message) {
+            statusBox.textContent = message;
+        }
+
+        function updateProgress(count) {
+            const percent = (count / captureFrames) * 100;
+
+            progressFill.style.width =
+                Math.min(percent, 100) + "%";
+
+            progressText.textContent =
+                count + " of " + captureFrames +
+                " frames captured";
+        }
+
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+
+            video.srcObject = null;
+            cameraLabel.textContent = "CAMERA OFF";
+
+            startBtn.disabled = false;
+            captureBtn.disabled = true;
+            stopBtn.disabled = true;
+        }
+
+        startBtn.addEventListener("click", startCamera);
+        captureBtn.addEventListener("click", captureFace);
+
+        stopBtn.addEventListener("click", () => {
+            if (busy) return;
+
+            stopCamera();
+
+            instruction.textContent =
+                "Camera stopped. Start it again when ready.";
+
+            showStatus("Camera stopped.");
+        });
+
+        async function startCamera() {
+            try {
+                if (!navigator.mediaDevices ||
+                    !navigator.mediaDevices.getUserMedia) {
+                    showStatus(
+                        "Camera is not supported here. Open the project using http://127.0.0.1:5000."
+                    );
+                    return;
+                }
+
+                showStatus("Waiting for camera permission...");
+
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: "user",
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    },
+                    audio: false
+                });
+
+                video.srcObject = stream;
+
+                await new Promise((resolve, reject) => {
+                    if (video.readyState >= 2 &&
+                        video.videoWidth > 0) {
+                        resolve();
+                    } else {
+                        video.onloadedmetadata = resolve;
+                        video.onerror = () => reject(
+                            new Error("Video could not be loaded.")
+                        );
+                    }
+                });
+
+                await video.play();
+
+                startBtn.disabled = true;
+                captureBtn.disabled = false;
+                stopBtn.disabled = false;
+
+                cameraLabel.textContent = "LIVE CAMERA";
+
+                instruction.textContent =
+                    "Look naturally at the camera. No special pose is needed.";
+
+                showStatus(
+                    "Camera ready. When comfortable, click Register My Face."
+                );
+
+            } catch (error) {
+                console.error("Camera error:", error);
+
+                showStatus(
+                    "Camera could not start. Check browser camera permission and close other apps using the camera."
+                );
+
+                stopCamera();
+            }
+        }
+
+        async function captureFace() {
+            if (busy) return;
+
+            if (!consent.checked) {
+                showStatus(
+                    "Please confirm that you agree to register your own face."
+                );
+                return;
+            }
+
+            if (!stream || video.readyState < 2 ||
+                video.videoWidth === 0 ||
+                video.videoHeight === 0) {
+                showStatus(
+                    "Start the camera and wait until the live video appears."
+                );
+                return;
+            }
+
+            busy = true;
+            captureBtn.disabled = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = true;
+
+            const context = canvas.getContext("2d");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const images = [];
+
+            updateProgress(0);
+
+            try {
+                instruction.textContent =
+                    "Look naturally at the camera";
+
+                showStatus(
+                    "Capturing frames. Keep your face visible and look naturally at the camera."
+                );
+
+                // Capture frames over time. No left/right head
+                // movement is requested.
+                for (let i = 0; i < captureFrames; i++) {
+                    if (!stream) {
+                        throw new Error("Camera was stopped.");
+                    }
+
+                    // Mirror the saved frame to match the
+                    // mirrored live monitoring camera.
+                    context.save();
+                    context.translate(canvas.width, 0);
+                    context.scale(-1, 1);
+
+                    context.drawImage(
+                        video,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+
+                    context.restore();
+
+                    images.push(
+                        canvas.toDataURL("image/jpeg", 0.75)
+                    );
+
+                    updateProgress(i + 1);
+
+                    showStatus(
+                        "Capturing frame " + (i + 1) +
+                        " of " + captureFrames +
+                        ". Please look naturally at the camera."
+                    );
+
+                    await wait(250);
+                }
+
+                instruction.textContent =
+                    "Checking face samples";
+
+                showStatus(
+                    "Sending frames to the server. Please wait..."
+                );
+
+                const response = await fetch(
+                    "{{ url_for('save_face') }}",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            images: images
+                        })
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    showStatus(
+                        result.message ||
+                        "Face registration failed. Please try again."
+                    );
+
+                    captureBtn.disabled = false;
+                    stopBtn.disabled = false;
+                    return;
+                }
+
+                instruction.textContent =
+                    "Face registration completed";
+
+                showStatus(
+                    result.message +
+                    " Valid samples: " +
+                    result.valid_samples +
+                    ". Opening Dashboard..."
+                );
+
+                captureBtn.textContent = "Face Registered";
+                stopCamera();
+
+                await wait(1200);
+
+                window.location.href =
+                    result.next_url || "{{ url_for('dashboard') }}";
+
+            } catch (error) {
+                console.error("Registration error:", error);
+
+                showStatus(
+                    "Registration could not be completed. " +
+                    error.message +
+                    " Please try again."
+                );
+
+                captureBtn.disabled = false;
+                stopBtn.disabled = false;
+
+            } finally {
+                busy = false;
+            }
+        }
+
+        window.addEventListener("beforeunload", stopCamera);
+    </script>
+</body>
+</html>
